@@ -1,3 +1,10 @@
+"""
+log-loss training   = 0.151
+log-loss validation = 1.311
+accuracy training   = 0.950
+accuracy validation = 0.834
+"""
+
 import keras
 from keras.datasets import cifar10
 from keras.models import Sequential
@@ -34,6 +41,12 @@ model.add(GaussianNoise(0.3))
 
 model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
 model.add(Conv2D(128, (1, 1), activation='relu'))
+model.add(BatchNormalization())
+model.add(MaxPool2D())
+model.add(AlphaDropout(0.25))
+
+model.add(Conv2D(256, (3, 3), activation='relu', padding='same'))
+model.add(Conv2D(256, (1, 1), activation='relu'))
 model.add(BatchNormalization())
 model.add(MaxPool2D())
 model.add(AlphaDropout(0.25))
