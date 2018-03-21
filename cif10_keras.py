@@ -1,7 +1,7 @@
 import keras
 from keras.datasets import cifar10
 from keras.models import Sequential
-from keras.layers import Dense, Activation, Flatten, GaussianNoise
+from keras.layers import Dense, Activation, Flatten, GaussianNoise, Dropout
 from keras.layers import Conv2D, MaxPool2D, AlphaDropout, BatchNormalization
 from helpers import NeptuneCallback
 from deepsense import neptune
@@ -24,14 +24,12 @@ model.add(Conv2D(32, (3, 3), activation='relu', padding='same', input_shape=x_tr
 model.add(Conv2D(32, (1, 1), activation='relu'))
 model.add(MaxPool2D())
 model.add(BatchNormalization())
-model.add(AlphaDropout(0.25))
-model.add(GaussianNoise(0.3))
+model.add(Dropout(0.25))
 
 model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
 model.add(Conv2D(64, (1, 1), activation='relu'))
 model.add(BatchNormalization())
 model.add(MaxPool2D())
-model.add(AlphaDropout(0.25))
 model.add(GaussianNoise(0.3))
 
 model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
@@ -42,7 +40,7 @@ model.add(AlphaDropout(0.25))
 
 model.add(Flatten())
 model.add(Dense(1024, activation='relu'))
-model.add(AlphaDropout(0.5))
+model.add(AlphaDropout(0.4))
 model.add(Dense(512, activation='relu'))
 model.add(Dense(num_classes))
 model.add(Activation('softmax'))
