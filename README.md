@@ -2,6 +2,8 @@
 
 ## cifar 10 on neptune
 
-![alt text][logo]
+![alt text][chart]
+![alt text][list]
 
-[logo]: https://github.com/pknut/training_cnn/blob/master/training_cnn.png "png"
+[list]: https://github.com/pknut/training_cnn/blob/master/training_cnn.png
+[chart]: https://github.com/pknut/training_cnn/blob/master/chart.png
