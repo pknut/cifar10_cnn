@@ -1,7 +1,7 @@
 project-key: CIF
 
-name: Fun with cifar10
-tags: [cifar10]
+name: Fun with cifar
+tags: [cifar]
 
 environment: keras-2.0-gpu-py3
 

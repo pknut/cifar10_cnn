@@ -4,21 +4,21 @@ log-loss validation = 1.311
 accuracy training   = 0.950
 accuracy validation = 0.834
 """
-
+# change drop probability and increase epochs
 import keras
 from keras.datasets import cifar10
 from keras.models import Sequential
 from keras.layers import Dense, Activation, Flatten, GaussianNoise, Dropout
 from keras.layers import Conv2D, MaxPool2D, AlphaDropout, BatchNormalization
-from helpers import NeptuneCallback
 from deepsense import neptune
+from neptune_call import NeptuneCallback
 
 ctx = neptune.Context()
 ctx.tags.append('cifar10')
 ctx.tags.append('fun')
 
 num_classes = 10
-epochs = 50
+epochs = 100
 
 (x_train, y_train), (x_test, y_test) = cifar10.load_data()
 
@@ -31,29 +31,29 @@ model.add(Conv2D(32, (3, 3), activation='relu', padding='same', input_shape=x_tr
 model.add(Conv2D(32, (1, 1), activation='relu'))
 model.add(MaxPool2D())
 model.add(BatchNormalization())
-model.add(Dropout(0.25))
+model.add(Dropout(0.5))
 
 model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
 model.add(Conv2D(64, (1, 1), activation='relu'))
 model.add(BatchNormalization())
 model.add(MaxPool2D())
-model.add(GaussianNoise(0.3))
+model.add(GaussianNoise(0.4))
+model.add(Dropout(0.4))
 
 model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
 model.add(Conv2D(128, (1, 1), activation='relu'))
 model.add(BatchNormalization())
 model.add(MaxPool2D())
-model.add(AlphaDropout(0.25))
-
+model.add(AlphaDropout(0.5))
+'''
 model.add(Conv2D(256, (3, 3), activation='relu', padding='same'))
 model.add(Conv2D(256, (1, 1), activation='relu'))
-model.add(BatchNormalization())
 model.add(MaxPool2D())
-model.add(AlphaDropout(0.25))
-
+model.add(AlphaDropout(0.5))
+'''
 model.add(Flatten())
 model.add(Dense(1024, activation='relu'))
-model.add(AlphaDropout(0.4))
+model.add(AlphaDropout(0.5))
 model.add(Dense(512, activation='relu'))
 model.add(Dense(num_classes))
 model.add(Activation('softmax'))
