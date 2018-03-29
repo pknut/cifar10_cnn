@@ -1,8 +1,8 @@
 """
-log-loss training   = 1.444
-log-loss validation = 1.788
-accuracy training   = 0.595
-accuracy validation = 0.553
+log-loss training   = 1.072
+log-loss validation = 1.632
+accuracy training   = 0.680
+accuracy validation = 0.582
 """
 import keras
 from keras.datasets import cifar100
@@ -20,7 +20,7 @@ ctx.tags.append('fun')
 
 
 num_classes = 100
-epochs = 100
+epochs = 200
 
 (x_train, y_train), (x_test, y_test) = cifar100.load_data('fine')
 
@@ -47,7 +47,7 @@ model.add(BatchNormalization())
 model.add(Dropout(0.5))
 
 model.add(Conv2D(512, (3, 3), activation='relu', padding='same'))
-model.add(Conv2D(512, (4, 3), activation='relu', padding='same'))
+model.add(Conv2D(512, (3, 3), activation='relu', padding='same'))
 model.add(MaxPool2D())
 model.add(Dropout(0.5))
 
@@ -58,7 +58,7 @@ model.add(Dropout(0.5))
 model.add(Dense(num_classes))
 model.add(Activation('softmax'))
 
-optimizer = keras.optimizers.Adam(lr=0.0005)
+optimizer = keras.optimizers.Adam(lr=0.0001)
 
 model.compile(optimizer=optimizer,
               loss='categorical_crossentropy',
@@ -68,7 +68,7 @@ print(model.summary())
 ctx.channel_send('n_layers', len(model.layers))
 ctx.channel_send('n_parameters', model.count_params())
 
-early_stopping = EarlyStopping(patience=5)
+early_stopping = EarlyStopping(patience=10)
 
 model.fit(x_train, y_train,
           epochs=epochs,
