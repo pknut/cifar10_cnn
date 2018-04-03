@@ -1,8 +1,8 @@
 """
-log-loss training   = 1.230
-log-loss validation = 1.640
-accuracy training   = 0.654
-accuracy validation = 0.589
+log-loss training   = 1.237
+log-loss validation = 1.427
+accuracy training   = 0.647
+accuracy validation = 0.619
 """
 import keras
 from keras.datasets import cifar100
@@ -30,36 +30,36 @@ y_test = keras.utils.to_categorical(y_test, num_classes)
 
 model = Sequential()
 
-model.add(Conv2D(64, (3, 3), activation='relu', padding='same', input_shape=x_train.shape[1:]))
-model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(Conv2D(64, (3, 3), activation='elu', padding='same', input_shape=x_train.shape[1:]))
+model.add(Conv2D(64, (3, 3), activation='elu'))
 model.add(MaxPool2D())
 model.add(BatchNormalization())
 model.add(Dropout(0.25))
 
-model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
-model.add(Conv2D(128, (3, 3), activation='relu'))
+model.add(Conv2D(128, (3, 3), activation='elu', padding='same'))
+model.add(Conv2D(128, (3, 3), activation='elu'))
 model.add(MaxPool2D())
 model.add(Dropout(0.25))
 
-model.add(Conv2D(256, (3, 3), activation='relu', padding='same'))
-model.add(Conv2D(256, (3, 3), activation='relu'))
+model.add(Conv2D(256, (3, 3), activation='elu', padding='same'))
+model.add(Conv2D(256, (3, 3), activation='elu'))
 model.add(MaxPool2D())
 model.add(BatchNormalization())
 model.add(Dropout(0.25))
 
-model.add(Conv2D(512, (3, 3), activation='relu', padding='same'))
-model.add(Conv2D(512, (3, 3), activation='relu', padding='same'))
+model.add(Conv2D(512, (3, 3), activation='elu', padding='same'))
+model.add(Conv2D(512, (3, 3), activation='elu', padding='same'))
 model.add(MaxPool2D())
 model.add(Dropout(0.5))
 
 model.add(Flatten())
-model.add(Dense(1024, activation='relu'))
-model.add(Dense(1024, activation='relu'))
+model.add(Dense(1024, activation='elu'))
+model.add(Dense(1024, activation='elu'))
 model.add(Dropout(0.5))
 model.add(Dense(num_classes))
 model.add(Activation('softmax'))
 
-optimizer = keras.optimizers.Adam(lr=0.001)
+optimizer = keras.optimizers.Adam(lr=0.0005)
 
 model.compile(optimizer=optimizer,
               loss='categorical_crossentropy',
