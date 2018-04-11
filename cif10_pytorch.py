@@ -1,3 +1,7 @@
+"""
+accuracy training   = 78.614%
+accuracy validation = 63.51%
+"""
 import torch
 import torch.optim as optim
 import torch.nn as nn
@@ -24,24 +28,33 @@ classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship'
 
 epochs = 20
 
+
 class Net(nn.Module):
 
     def __init__(self):
         super(Net, self).__init__()
-        self.conv1 = nn.Conv2d(in_channels=3, out_channels=8, kernel_size=5)
+
+        self.conv1 = nn.Conv2d(in_channels=3, out_channels=16, kernel_size=5)
         self.pool = nn.MaxPool2d(kernel_size=(2, 2))
-        self.conv2 = nn.Conv2d(in_channels=8, out_channels=16, kernel_size=5)
-        self.fc1 = nn.Linear(in_features=16 * 5 * 5, out_features=120)
+        self.conv2 = nn.Conv2d(in_channels=16, out_channels=32, kernel_size=5)
+        self.fc1 = nn.Linear(in_features=32 * 5 * 5, out_features=120)
         self.fc2 = nn.Linear(in_features=120, out_features=84)
         self.fc3 = nn.Linear(in_features=84, out_features=10)
 
     def forward(self, x):
+        # batch_size x 3 x 32 x 32
         x = self.pool(F.relu(self.conv1(x)))
+        # batch_size x 16 x 14 x 14
         x = self.pool(F.relu(self.conv2(x)))
-        x = x.view(-1, 16 * 5 * 5)
+        # batch_size x 32 x 5 x 5
+        x = x.view(-1, 32 * 5 * 5)
+        # batch_size x 32*5*5
         x = F.relu(self.fc1(x))
+        # batch_size x 120
         x = F.relu(self.fc2(x))
+        # batch_size x 84
         x = self.fc3(x)
+        #batch_size x 10
         return x
 
 
@@ -81,9 +94,9 @@ for epoch in range(epochs):
 
     # total=5000, i+1=12500
 
-    print('Epoch: ', epoch+1)
+    print('Epoch: ', epoch+1, '/', epochs)
     ctx.channel_send('Log-loss training', epoch + 1, running_loss/(i+1))
-    ctx.channel_send('Accuracy training', epoch + 1, 100 * correct / total)
+    ctx.channel_send('Accuracy training', epoch + 1, correct / total)
 
     if (epoch+1) % 3 == 0:
         correct = 0
@@ -96,7 +109,7 @@ for epoch in range(epochs):
             total += labels.size(0)
             correct += (predicted == labels).sum()
 
-        ctx.channel_send('Accuracy validation', epoch + 1, 100 * correct / total)
+        ctx.channel_send('Accuracy validation', epoch + 1, correct / total)
 
 
 print('Finished Training')
@@ -111,8 +124,8 @@ for data in testloader:
     total += labels.size(0)
     correct += (predicted == labels).sum()
 
-print('Accuracy of the network on the 10000 test images: %d %%' % (100 * correct / total))
-ctx.channel_send('Accuracy validation', epochs, 100 * correct / total)
+print('Accuracy of the network on the 10000 test images: %d %%' % (correct / total))
+ctx.channel_send('Accuracy validation', epochs, correct / total)
 
 class_correct = list(0. for i in range(10))
 class_total = list(0. for i in range(10))
@@ -128,5 +141,5 @@ for data in testloader:
         class_total[label] += 1
 
 for i in range(10):
-    print('Accuracy of %5s : %2d %%' % (classes[i], 100 * class_correct[i] / class_total[i]))
+    print('Accuracy of %5s : %2d %%' % (classes[i], class_correct[i] / class_total[i]))
 
